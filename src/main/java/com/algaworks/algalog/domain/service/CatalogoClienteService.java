@@ -20,14 +20,13 @@ public class CatalogoClienteService {
 
 	@Transactional
 	public Cliente salvar(Cliente cliente) {
-		boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail())
-		.stream()
-		.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
-		
-		if(emailEmUso) {
+		boolean emailEmUso = clienteRepository.findByEmail(cliente.getEmail()).stream()
+				.anyMatch(clienteExistente -> !clienteExistente.equals(cliente));
+
+		if (emailEmUso) {
 			throw new NegocioException("O email já está em uso.");
 		}
-		
+
 		return clienteRepository.save(cliente);
 	}
 
@@ -41,7 +40,7 @@ public class CatalogoClienteService {
 	}
 
 	public Optional<Cliente> buscaPorId(Long clienteId) {
-		return clienteRepository.findById(clienteId);
+		return Optional.of(clienteRepository.findById(clienteId).orElseThrow(() -> new NegocioException("Cliente não encontrado.")));
 	}
 
 	public Boolean existePorId(Long clienteId) {
